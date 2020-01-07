@@ -7,6 +7,7 @@ import { Decimal } from "decimal.js";
 import { AdditionalService } from "../services/additionals.service";
 import { BillService } from "../services/bills.service";
 import { UserService } from "../services/users.service";
+import { CryptoCurrencyService } from "../services/cryptocurrency.service";
 
 // Import Interfaces
 import { IResponseError } from "../resources/interfaces/IResponseError.interface";
@@ -15,6 +16,7 @@ import { IResponseError } from "../resources/interfaces/IResponseError.interface
 import { User } from "../entities/user.entity";
 import { Additional } from "../entities/additional.entity";
 import { Bill } from "../entities/bill.entity";
+import { CryptoCurrency } from "../entities/cryptocurrency.entity";
 
 const billsRouter: Router = Router();
 
@@ -32,16 +34,19 @@ billsRouter
     const billService = new BillService();
     const additionalService = new AdditionalService();
     const userService = new UserService();
+    const cryptoCurrencyService = new CryptoCurrencyService();
 
     try {
       const user: User = await userService.getById(req.user.id);
       const bill: Bill = await billService.getByUser(user);
       const additional: Additional = await additionalService.getByUser(user);
+      const cryptoCurrency: CryptoCurrency = await cryptoCurrencyService.getById(req.user.id);
 
       if (user && bill && additional) {
         res.status(HttpStatus.OK).json({
           accountBill: bill.accountBill,
           availableFunds: bill.availableFunds,
+          crptFunds: cryptoCurrency.total,
           currency: {
             id: bill.currency.id,
             name: bill.currency.name
@@ -133,7 +138,7 @@ billsRouter
  *
  */
 billsRouter
-  .route("/:amountMoney/isAmountMoney")
+  .route("/:amountMoney/:currencyType/isAmountMoney")
 
   .get(
     [
@@ -147,6 +152,7 @@ billsRouter
       const userService = new UserService();
       const validationErrors = validationResult(req);
       const amountMoney: number = Number(req.params.amountMoney);
+      const currencyType: number = Number(req.params.currencyType);
 
       if (!validationErrors.isEmpty()) {
         const err: IResponseError = {
@@ -158,14 +164,26 @@ billsRouter
       }
 
       try {
-        const user: User = await userService.getById(req.user.id);
-        const isAmountMoney: boolean = await billService.isAmountMoney(
-          new Decimal(amountMoney),
-          user
-        );
-        return res.status(HttpStatus.OK).json({
-          isAmountMoney
-        });
+        if(currencyType==24){
+          const user: User = await userService.getById(req.user.id);
+          const isAmountMoney: boolean = await billService.isAmountMoney(
+            new Decimal(amountMoney),
+            user
+          );
+          return res.status(HttpStatus.OK).json({
+            isAmountMoney
+          });
+        }else{
+          const user: User = await userService.getById(req.user.id);
+          const isAmountMoney: boolean = await billService.isAmountMoney(
+            new Decimal(amountMoney),
+            user
+          );
+          return res.status(HttpStatus.OK).json({
+            isAmountMoney
+          });
+        }
+        
       } catch (error) {
         const err: IResponseError = {
           success: false,

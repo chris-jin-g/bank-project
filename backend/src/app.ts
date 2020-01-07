@@ -28,6 +28,7 @@ import { Additional } from "./entities/additional.entity";
 import { Language } from "./entities/language.entity";
 import { Config } from "./entities/config.entity";
 import { Template } from "./entities/template.entity";
+import { CryptoCurrency } from "./entities/cryptocurrency.entity";
 
 // Import Utils
 import * as swaggerDocument from "./utils/swagger/swagger.json";

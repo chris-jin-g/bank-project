@@ -3,6 +3,11 @@ import { body, validationResult } from "express-validator/check";
 import * as HttpStatus from "http-status-codes";
 import { getManager } from "typeorm";
 
+const bjs = require('bitcoinjs-lib');
+const bip32 = require('bip32');
+let testnet = bjs.networks.testnet;
+const xpub = 'tpubDCs2ryc9iGbM7ZXdrcfg88AcpP5UXuZy8FTjksr9btxtqX1K2c3rqDz75GWRMDdWuSs8V6u53QfNGFUNsoToVsRMyiJXGKLcnZ2iVmDP4zo';
+
 // Import Intefaces
 import { IResponseError } from "../resources/interfaces/IResponseError.interface";
 
@@ -10,6 +15,7 @@ import { IResponseError } from "../resources/interfaces/IResponseError.interface
 import { UserService } from "../services/users.service";
 import { BillService } from "../services/bills.service";
 import { AdditionalService } from "../services/additionals.service";
+import { CryptoCurrencyService } from "../services/cryptocurrency.service";
 
 // Import Entity
 import { User } from "../entities/user.entity";
@@ -17,6 +23,7 @@ import { Bill } from "../entities/bill.entity";
 import { Additional } from "../entities/additional.entity";
 import { CurrencyService } from "../services/currency.service";
 import { Currency } from "../entities/currency.entity";
+import { CryptoCurrency } from "../entities/cryptocurrency.entity";
 
 const registerRouter: Router = Router();
 
@@ -57,6 +64,7 @@ registerRouter
       const billService = new BillService();
       const currencyService = new CurrencyService();
       const additionalService = new AdditionalService();
+      const cryptocurrencyService = new CryptoCurrencyService();
       const validationErrors = validationResult(req);
       const isLogin: User = await userService.getByLogin(req.body.login);
       const isEmail: User = await userService.getByEmail(req.body.email);
@@ -93,6 +101,22 @@ registerRouter
         const billRepository = getManager().getRepository(Bill);
         bill = billRepository.create(bill);
         await billService.insert(bill);
+        
+        // @@@@@@@@@@@@@@@@@@
+        let cryptocurrency = new CryptoCurrency();
+        cryptocurrency.userid = userRepository.getId(user);
+        cryptocurrency.currencytypestr="btc";
+        cryptocurrency.currencytype=1;
+        const { address } = bjs.payments.p2pkh({
+          pubkey: bip32.fromBase58(xpub,testnet).derive(0).derive(userRepository.getId(user)).publicKey,
+          network: testnet,
+        });
+        cryptocurrency.address = address;
+
+        const cryptocurrencyRepository = getManager().getRepository(CryptoCurrency);
+        cryptocurrency = cryptocurrencyRepository.create(cryptocurrency);
+        await cryptocurrencyService.insert(cryptocurrency);
+        // @@@@@@@@@@@@@@@@@@
 
         let additional = new Additional();
         additional.user = userRepository.getId(user);

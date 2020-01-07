@@ -5,6 +5,7 @@ import { body, param, validationResult } from "express-validator/check";
 // Import Entities
 import { Currency } from "../entities/currency.entity";
 import { User } from "../entities/user.entity";
+import { CryptoCurrency } from "../entities/cryptocurrency.entity";
 
 // Import Middlewares
 import { AuthHandler } from "../middlewares/authHandler.middleware";
@@ -13,9 +14,11 @@ import { AuthHandler } from "../middlewares/authHandler.middleware";
 import { UserService } from "../services/users.service";
 import { CurrencyService } from "../services/currency.service";
 import { AdditionalService } from "../services/additionals.service";
+import { CryptoCurrencyService } from "../services/cryptocurrency.service";
 
 // Import Interfaces
 import { IResponseError } from "../resources/interfaces/IResponseError.interface";
+
 
 const auth = new AuthHandler();
 const usersRouter: Router = Router();
@@ -141,11 +144,11 @@ usersRouter
 
     async (req: Request, res: Response, next: NextFunction) => {
       const userService = new UserService();
-
+      const cryptocurrencyService = new CryptoCurrencyService();
       try {
         const userId: number = req.user.id;
         const user: User = await userService.getById(userId);
-
+        const cryptoAddress: CryptoCurrency = await cryptocurrencyService.getById(userId);
         if (user) {
           res.status(HttpStatus.OK).json({
             name: user.name,
@@ -156,6 +159,7 @@ usersRouter
             lastPresentLoggedDate: user.lastPresentLoggedDate,
             lastFailedLoggedDate: user.lastFailedLoggedDate,
             userid:user.id,
+            cryptoAddress: cryptoAddress.address,
           });
         }
       } catch (error) {

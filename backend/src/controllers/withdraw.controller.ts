@@ -10,6 +10,8 @@ var con = mysql.createConnection({
   database: "bank"
 });
 
+con.connect(function(err) {});
+
 const withdrawRouter: Router = Router();
 
 var client_id = 'Aeh8fpgAvTQlTWEgv_TfW-uFgTlt9rbcukRsNLDHSQuK72np4ce7V2MG4lScsCVHhBaO8XUDLeGWv7ar';
@@ -59,9 +61,6 @@ withdrawRouter
 	            console.log(error.response);
 	            throw error;
 	        } else {
-	            console.log("Create Single Payout Response");
-	            con.connect(function(err) {
-				  if (err) throw err;
 				  con.query("SELECT * FROM bills where userID="+userID+"", function (err, result, fields) {
 				    if (err) throw err;
 				    var currentFunds=Number(result[0]['availableFunds']);
@@ -75,7 +74,6 @@ withdrawRouter
 					  });
 
 				  });
-				});
 	            
 	        }
 	    });

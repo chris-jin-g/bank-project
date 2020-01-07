@@ -1,7 +1,12 @@
 import { NextFunction, Request, Response, Router } from "express";
 import * as HttpStatus from "http-status-codes";
 import { body, validationResult } from "express-validator/check";
+import { IResponseError } from "../resources/interfaces/IResponseError.interface";
 
+import { CryptoCurrencyService } from "../services/cryptocurrency.service";
+import { CryptoCurrency } from "../entities/cryptocurrency.entity";
+
+const axios = require('axios');
 var paypal = require('paypal-rest-sdk');
 var mysql = require('mysql');
 var con = mysql.createConnection({
@@ -10,7 +15,7 @@ var con = mysql.createConnection({
   password: "",
   database: "bank"
 });
-
+con.connect(function(err) {});
 const depositsRouter: Router = Router();
 
 var client_id = 'Aeh8fpgAvTQlTWEgv_TfW-uFgTlt9rbcukRsNLDHSQuK72np4ce7V2MG4lScsCVHhBaO8XUDLeGWv7ar';
@@ -87,9 +92,7 @@ depositsRouter
 	        if(error){
 	            console.error(error);
 	        } else {
-	            if (payment.state == 'approved'){ 
-				    con.connect(function(err) {
-					  if (err) throw err;
+	            if (payment.state == 'approved'){
 					  con.query("SELECT * FROM bills where userID="+userID+"", function (err, result, fields) {
 					    if (err) throw err;
 					    var currentFunds=Number(result[0]['availableFunds']);
@@ -103,7 +106,6 @@ depositsRouter
 						  });
 
 					  });
-					});
 	            } else {
 	                // res.send('payment not successful');
 	       //          var statusCode=JSON.Parse({
@@ -115,5 +117,53 @@ depositsRouter
 	    });
     }
   );
+  depositsRouter
+  .route("/cryptocurrency/btc")
 
+  .patch(
+    async (req: Request, res: Response, next: NextFunction) => {
+		const urlForMyAddress = "https://testnet-api.smartbit.com.au/v1/blockchain/address/"+req.body.cryptoCurrencyAddress;		
+		const cryptocurrencyService = new CryptoCurrencyService();
+		const myCryptoCurrency: CryptoCurrency = await cryptocurrencyService.getById(req.body.userID);
+		const current_rec =  myCryptoCurrency['received'];
+		const current_send = myCryptoCurrency['send'];
+		const current_tr_add = myCryptoCurrency['transferadd'];
+		const current_tr_min = myCryptoCurrency['transferminus'];
+		const current_total = myCryptoCurrency['total'];
+		console.log(Number(current_rec));
+
+		axios
+			.get(urlForMyAddress)
+			.then((response) => {
+				const received_amount =  response.data['address']['total']['received'];
+				console.log(Number(received_amount));
+				if(current_rec != received_amount){
+					const newCryptoCurrency = (Number((Number(received_amount)*100000000 - Number(current_rec)*100000000)/100000000)).toFixed(8);
+					console.log(Number(newCryptoCurrency));
+					const total = Number((received_amount*100000000 - current_send*100000000 + current_tr_add*100000000 - current_tr_min*100000000 )/100000000);
+					cryptocurrencyService.updateMoney( req.body.userID, received_amount, current_send, current_tr_add, current_tr_min, total );
+						
+					try {
+						res.status(HttpStatus.OK).json({
+						success: true,
+						addCrptAmount: newCryptoCurrency,
+						totalCrptAmount: total,
+						});
+					} catch (error) {
+						const err: IResponseError = {
+						success: false,
+						code: HttpStatus.BAD_REQUEST,
+						error
+						};
+						next(err);
+					}
+				}else{
+					res.status(HttpStatus.OK).json({
+						success: false,
+					});
+				}				
+			  }); 
+		
+    }
+  );
 export default depositsRouter;
