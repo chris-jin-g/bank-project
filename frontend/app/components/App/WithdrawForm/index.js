@@ -47,14 +47,16 @@ import {
   makeCurrencyIdSelector,
   makeCurrencyMessageSelector,
   makeErrorSelector,
-  makeErrorAmount,
+  makeErrorWithdrawAmount,
+  makeErrorWithdrawEmail,
 } from 'containers/WithdrawPage/selectors';
 
 const stateSelector = createStructuredSelector({
   message: makeMessageSelector(),
   currency: makeCurrencySelector(),
   currencyId: makeCurrencyIdSelector(),
-  errorAmount: makeErrorAmount(),
+  errorWithdrawAmount: makeErrorWithdrawAmount(),
+  errorWithdrawEmail: makeErrorWithdrawEmail(),
 });
 
 const key = 'settingsPage';
@@ -66,7 +68,7 @@ export default function SettingsForm() {
   const onLoadCurrency = () => dispatch(loadCurrencyAction());
   const onChangeWithdrawAmount = e =>dispatch(ChangeWithdrawAmount(e.target.value));
   const onWithdrawRequest = e => dispatch(withdrawAction()) && e.preventDefault();
-  const onChangePaypalAccount = e=> dispatch(changePaypalAccountAction(e.target.value));
+  const onChangePaypalAccount = e => dispatch(changePaypalAccountAction(e.target.value));
   const {
     errorName,
     errorEmail,
@@ -76,7 +78,8 @@ export default function SettingsForm() {
     currencyId,
     isLoading,
     isOpenNavigationDesktop,
-    errorAmount,
+    errorWithdrawAmount,
+    errorWithdrawEmail,
   } = useSelector(stateSelector);
 
   useInjectReducer({ key, reducer });
@@ -185,11 +188,11 @@ export default function SettingsForm() {
             <InputWrapper
               key={1}
               type="number"
-              error={errorName}
+              error={errorWithdrawAmount}
               onChange={onChangeWithdrawAmount}
             /> 
-            {errorAmount && (
-              <LabelWrapper error={errorAmount}>{errorAmount}</LabelWrapper>
+            {errorWithdrawAmount && (
+              <LabelWrapper error={errorWithdrawAmount}>{errorWithdrawAmount}</LabelWrapper>
             )}         
           </div>
           <div>
@@ -200,12 +203,12 @@ export default function SettingsForm() {
             <InputWrapper
               key={2}
               type="email"
-              error={errorName}
+              error={errorWithdrawEmail}
               onChange={onChangePaypalAccount}
             /> 
-            {errorEmail && (
-              <LabelWrapper error={errorEmail}>{errorEmail}</LabelWrapper>
-            )}         
+            {errorWithdrawEmail && (
+              <LabelWrapper error={errorWithdrawEmail}>{errorWithdrawEmail}</LabelWrapper>
+            )}       
           </div>
           <ButtonWrapper type="submit" disabled={isLoading}>
             <FormattedMessage {...messages.confirmPay} />

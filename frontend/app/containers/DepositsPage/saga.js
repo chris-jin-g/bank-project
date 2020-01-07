@@ -4,6 +4,7 @@ import request from 'utils/request';
 import ApiEndpoint from 'utils/api';
 import { FormattedMessage } from 'react-intl';
 import messages from 'containers/DepositsPage/messages';
+import copy from 'copy-to-clipboard';
 
 // Import Services
 import AuthService from 'services/auth.service';
@@ -28,6 +29,7 @@ import {
   makeDepositsCurrency,
   makeDepositsCurrencyName,
   makeUserID,
+  makeCryptoAddress,
 } from 'containers/DepositsPage/selectors';
 
 // Import Actions
@@ -53,6 +55,9 @@ import {
   saveDataSuccessAction,
   depositsAction,
   depositsErrorAction,
+  loadCrptDataSuccessAction,
+  crptAddressCopySuccessAction,
+  handleCloseCopyAction,
 } from 'containers/DepositsPage/actions';
 
 // Import Constants
@@ -62,7 +67,10 @@ import {
   SAVE_DATA,
   ENTER_NEW_CURRENCY,
   ON_DEPOSITS_REQUEST,
+  ON_HANDLE_COPY,
+  ON_HANDLE_CONFIRMDEPOSITS,
 } from 'containers/DepositsPage/constants';
+// import { ON_HANDLE_CONFIRM } from './constants';
 
 export function* handleUserData() {
   const api = new ApiEndpoint();
@@ -84,7 +92,6 @@ export function* handleUserData() {
           Authorization: `Bearer ${token}`,
         },
       });
-
       const responseBillsData = yield call(request, requestBillsData, {
         method: 'GET',
         headers: {
@@ -95,7 +102,7 @@ export function* handleUserData() {
       });
 
       if (responseUserData && responseBillsData) {
-        const { name, surname, email, userid } = responseUserData;
+        const { name, surname, email, userid, cryptoAddress} = responseUserData;
         const userCurrencyId = responseBillsData.currency.id;
         if (!name || !surname || !email || !userCurrencyId)
           return yield put(
@@ -103,9 +110,8 @@ export function* handleUserData() {
               <FormattedMessage {...messages.errorServer} />,
             ),
           );
-
         yield put(
-          loadUserDataSuccessAction(name, surname, email, userCurrencyId,userid),
+          loadUserDataSuccessAction(name, surname, email, userCurrencyId,userid, cryptoAddress),
         );
       }
     } catch (error) {
@@ -140,7 +146,50 @@ export function* handleCurrency() {
     yield put(loadCurrencyErrorAction(error));
   }
 }
-
+export function* handleCopy() {
+  let cryptoAddress = yield select(makeCryptoAddress());
+  copy(cryptoAddress);
+  const copyStatus = true;
+  yield put(
+    crptAddressCopySuccessAction(copyStatus),
+  );
+}
+export function* handleConfirm(){  
+  const auth = new AuthService();
+  const api = new ApiEndpoint();
+  const requestDeposits = api.getDepositsPath();
+  const token = auth.getToken();
+  const depositsUrl = requestDeposits+"/cryptocurrency/btc";
+  let cryptoAddress = yield select(makeCryptoAddress());
+  let userID = yield select(makeUserID());
+  try {
+    const responseUserData = yield call(request, depositsUrl, {
+      method: 'PATCH',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        cryptoCurrencyType: 1,
+        cryptoCurrencyAddress: cryptoAddress,
+        userID: userID,
+      }),
+      
+    });
+    if (responseUserData) {
+      const { addCrptAmount, totalCrptAmount } = responseUserData;
+      const newCrptStatus = 1;
+      if(addCrptAmount && totalCrptAmount){
+        yield put(
+          loadCrptDataSuccessAction(addCrptAmount, totalCrptAmount,newCrptStatus),
+        );  
+      }
+    }
+  } catch (error) {
+    yield put(loadUserDataErrorAction(error));
+  }
+}
 export function* handleDeposits() {
   const auth = new AuthService();
   const api = new ApiEndpoint();
@@ -359,4 +408,6 @@ export default function* settingsPageSaga() {
   yield takeLatest(LOAD_CURRENCY, handleCurrency);
   yield takeLatest([SAVE_DATA, ENTER_NEW_CURRENCY], handleSaveData);
   yield takeLatest(ON_DEPOSITS_REQUEST, handleDeposits);
+  yield takeLatest(ON_HANDLE_COPY, handleCopy);
+  yield takeLatest(ON_HANDLE_CONFIRMDEPOSITS, handleConfirm);
 }

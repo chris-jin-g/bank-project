@@ -19,7 +19,7 @@ const FormWrapper = styled.div`
   	min-width:300px;
   }
   &:last-child{
-    padding:30px
+    padding:50px 10px;
   }
 `;
 

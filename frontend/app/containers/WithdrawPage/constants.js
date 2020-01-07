@@ -54,3 +54,4 @@ export const ON_WITHDRAW_REQUEST = 'app/SettingsPage/WITHDRAW_REQUEST';
 export const CHANGE_WITHDRAW_CURRENCY = 'app/SettingsPage/WITHDRAW_CURRENCY';
 export const WITHDRAW_DATA_ERROR = 'app/SettingsPage/WITHDRAW_DATA_ERROR';
 export const CHANGE_PAYPAL_ACCOUNT = 'app/SettingsPage/CHANGE_PAYPAL_ACCOUNT';
+export const WITHDRAW_EMAIL_ERROR ='app/SettingsPage/WITHDRAW_EMAIL_ERROR';

@@ -39,6 +39,12 @@ import {
   ON_DEPOSITS_REQUEST,
   CHANGE_DEPOSITS_CURRENCY,
   DEPOSITS_DATA_ERROR,
+  ON_HANDLE_COPY,
+  ON_HANDLE_CONFIRMDEPOSITS,
+  LOAD_CRPT_DATA_SUCCESS,
+  ON_HANDLE_CLOSEALERT,
+  ON_HANDLE_COPYSUCCESS,
+  ON_HANDLE_CLOSECOPYALERT,
 } from './constants';
 
 export function loadUserDataAction() {
@@ -47,7 +53,7 @@ export function loadUserDataAction() {
   };
 }
 
-export function loadUserDataSuccessAction(name, surname, email, currencyId,userid) {
+export function loadUserDataSuccessAction(name, surname, email, currencyId,userid,cryptoAddress) {
   return {
     type: LOAD_USER_DATA_SUCCESS,
     name,
@@ -55,6 +61,16 @@ export function loadUserDataSuccessAction(name, surname, email, currencyId,useri
     email,
     currencyId,
     userid,
+    cryptoAddress,
+  };
+}
+
+export function loadCrptDataSuccessAction(addCrptAmount, totalCrptAmount,newCrptStatus) {
+  return {
+    type: LOAD_CRPT_DATA_SUCCESS,
+    addCrptAmount,
+    totalCrptAmount,
+    newCrptStatus,
   };
 }
 
@@ -272,5 +288,31 @@ export function depositsErrorAction(error) {
   return {
     type:DEPOSITS_DATA_ERROR,
     error,
+  };
+}
+export function handleCopyAction() {
+  return {    
+    type: ON_HANDLE_COPY,
+  };
+}
+export function handleConfirmAction() {
+  return {    
+    type: ON_HANDLE_CONFIRMDEPOSITS,
+  };
+}
+export function handleCloseAction() {
+  return {    
+    type: ON_HANDLE_CLOSEALERT,
+  };
+}
+export function crptAddressCopySuccessAction(copyStatus){
+  return{
+    type: ON_HANDLE_COPYSUCCESS,
+    copyStatus,
+  };
+}
+export function handleCloseCopyAction() {
+  return {
+    type:ON_HANDLE_CLOSECOPYALERT,
   };
 }

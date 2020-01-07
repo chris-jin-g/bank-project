@@ -145,10 +145,15 @@ const makeWithdrawCurrency = () =>
     selectSettingsPageDomain,
     substate=> substate.withdrawCurreny,
   );
-const makeErrorAmount = () =>
+const makeErrorWithdrawAmount = () =>
   createSelector(
       selectSettingsPageDomain,
-      substate=>substate.errorAmount,
+      substate=>substate.errorWithdrawAmount,
+    );
+const makeErrorWithdrawEmail = () =>
+  createSelector(
+      selectSettingsPageDomain,
+      substate=>substate.errorWithdrawEmail,
     );
 const makePaypalAccount = () =>
   createSelector(
@@ -188,7 +193,8 @@ export {
   makeIsLoadingSelector,
   makeWithdrawAmountSelector,
   makeWithdrawCurrency,
-  makeErrorAmount,
+  makeErrorWithdrawAmount,
+  makeErrorWithdrawEmail,
   makePaypalAccount,
   makeWithdrawCurrencyName,
   makeUserID,

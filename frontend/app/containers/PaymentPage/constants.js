@@ -63,3 +63,4 @@ export const MAKE_PAYMENT_ERROR = 'app/PaymentPage/MAKE_PAYMENT_ERROR';
 
 export const PAYMENT_STEP_NEXT = 'app/PaymentPage/PAYMENT_STEP_NEXT';
 export const PAYMENT_STEP_BACK = 'app/PaymentPage/PAYMENT_STEP_BACK';
+export const CHANGE_CURRENCY_TYPE = 'app/PaymentPage/CHANGE_CURRENCY_TYPE';

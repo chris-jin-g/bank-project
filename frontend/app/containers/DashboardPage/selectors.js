@@ -133,7 +133,12 @@ const makeSelectDashboardPage = () =>
     selectDashboardPageDomain,
     substate => substate,
   );
-
+const makeAvailableCrptFunds = () =>
+  createSelector(
+    selectDashboardPageDomain,
+    substate => substate.availableCrptFunds,
+  );
+  
 export default makeSelectDashboardPage;
 export {
   makeNameSelector,
@@ -155,4 +160,5 @@ export {
   makeRechartsColorsSelector,
   makeRechartsDataSelector,
   makeErrorSelector,
+  makeAvailableCrptFunds,
 };

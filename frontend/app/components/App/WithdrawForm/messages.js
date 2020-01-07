@@ -79,11 +79,11 @@ export default defineMessages({
   },
   withdrawCurrency:{
     id: `${scope}.withdrawCurrency`,
-    defaultMessage: 'Deposit Currency',
+    defaultMessage: 'Withdraw Currency',
   },
   withdrawAmount:{
     id: `${scope}.withdrawAmount`,
-    defaultMessage: 'Deposit Amount',
+    defaultMessage: 'Withdraw Amount',
   },
   confirmPay:{
     id: `${scope}.confirmPay`,

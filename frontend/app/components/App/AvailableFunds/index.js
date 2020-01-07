@@ -43,12 +43,15 @@ import {
   makeAvailableFundsSelector,
   makeAccountBalanceHistorySelector,
   makeCurrencySelector,
+  makeAvailableCrptFunds,
+
 } from 'containers/DashboardPage/selectors';
 
 const stateSelector = createStructuredSelector({
   availableFunds: makeAvailableFundsSelector(),
   accountBalanceHistory: makeAccountBalanceHistorySelector(),
   currency: makeCurrencySelector(),
+  availableCrptFunds: makeAvailableCrptFunds(),
 });
 
 export default function AvailableFunds() {
@@ -58,7 +61,7 @@ export default function AvailableFunds() {
   const getAccountBalanceHistory = () =>
     dispatch(getAccountBalanceHistoryAction());
   const getCurrency = () => dispatch(getCurrencyAction());
-  const { availableFunds, accountBalanceHistory, currency } = useSelector(
+  const { availableFunds, accountBalanceHistory, currency, availableCrptFunds } = useSelector(
     stateSelector,
   );
 
@@ -82,6 +85,10 @@ export default function AvailableFunds() {
             <HeavyWidgetJoin>
               <HeavyWidgetMain>{availableFunds}</HeavyWidgetMain>{' '}
               <HeavyWidgetUnit>{currency}</HeavyWidgetUnit>
+            </HeavyWidgetJoin>
+            <HeavyWidgetJoin>
+              <HeavyWidgetMain>{availableCrptFunds}</HeavyWidgetMain>{' '}
+              <HeavyWidgetUnit>BTC</HeavyWidgetUnit>
             </HeavyWidgetJoin>
           </HeavyWidgetLeftSide>
           <HeavyWidgetRightSide>

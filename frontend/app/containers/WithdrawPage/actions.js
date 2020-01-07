@@ -40,6 +40,7 @@ import {
   CHANGE_WITHDRAW_CURRENCY,
   WITHDRAW_DATA_ERROR,
   CHANGE_PAYPAL_ACCOUNT,
+  WITHDRAW_EMAIL_ERROR,
 } from './constants';
 
 export function loadUserDataAction() {
@@ -279,5 +280,11 @@ export function changePaypalAccountAction(email) {
   return {
     type: CHANGE_PAYPAL_ACCOUNT,
     email,
+  };
+}
+export function withdrawEmailErrorAction(error) {
+  return {
+    type:WITHDRAW_EMAIL_ERROR,
+    error,
   };
 }

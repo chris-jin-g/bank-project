@@ -40,6 +40,7 @@ import {
   GET_CURRENCY_ERROR,
   GET_AUTHORIZATION_KEY_SUCCESS,
   GET_AUTHORIZATION_KEY_ERROR,
+  CHANGE_CURRENCY_TYPE,
 } from './constants';
 
 export const initialState = {
@@ -58,6 +59,8 @@ export const initialState = {
   suggestions: [],
   isLoading: false,
   isSendAuthorizationKey: false,
+  currencyType: '24',
+  currencyTypeString: 'BTC',
 };
 
 /* eslint-disable default-case, no-param-reassign */
@@ -238,6 +241,11 @@ const paymentPageReducer = produce((draft, action) => {
       draft.message = '';
       draft.suggestionAuthorizationKey = '';
       break;
+    case CHANGE_CURRENCY_TYPE:
+      draft.currencyType =  action.currencyType;
+      draft.currencyTypeString = action.currencyTypeString;
+      break;
+    
   }
 }, initialState);
 

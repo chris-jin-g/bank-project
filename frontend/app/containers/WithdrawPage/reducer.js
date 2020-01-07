@@ -38,6 +38,7 @@ import {
   CHANGE_WITHDRAW_CURRENCY,
   WITHDRAW_DATA_ERROR,
   CHANGE_PAYPAL_ACCOUNT,
+  WITHDRAW_EMAIL_ERROR,
 } from './constants';
 
 export const initialState = {
@@ -60,11 +61,12 @@ export const initialState = {
   currencyMessage: '',
   isOpenAlert: false,
   isLoading: false,
-  withdrawAmount:'',
+  withdrawAmount: '',
   withdrawCurrency: 1,
-  errorAmount:'',
-  paypalAccount:'',
-  withdrawCurrencyName:'USD',
+  errorWithdrawAmount: '',
+  paypalAccount: '',
+  withdrawCurrencyName: 'USD',
+  errorWithdrawEmail: '',
   userID:'',
 };
 
@@ -253,10 +255,16 @@ const settingsPageReducer = produce((draft, action) => {
     case CHANGE_WITHDRAW_CURRENCY:
       draft.withdrawCurrency = action.withdrawCurrency;
       draft.withdrawCurrencyName=action.withdrawCurrencyName;
+      break;
     case WITHDRAW_DATA_ERROR:
-      draft.errorAmount=action.error;
+      draft.errorWithdrawAmount=action.error;
+      break;
     case CHANGE_PAYPAL_ACCOUNT:
       draft.paypalAccount=action.email;
+      break;
+    case WITHDRAW_EMAIL_ERROR:
+      draft.errorWithdrawEmail=action.error;
+      break;
   }
 }, initialState);
 

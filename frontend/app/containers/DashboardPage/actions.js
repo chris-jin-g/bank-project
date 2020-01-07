@@ -57,6 +57,8 @@ import {
   GET_RECHARTS_COLORS,
   GET_RECHARTS_COLORS_SUCCESS,
   GET_RECHARTS_COLORS_ERROR,
+  ON_LOAD_USER_DATA,
+  ON_AVAILABLE_CRPT_FUNDS,
 } from './constants';
 
 /**
@@ -734,5 +736,17 @@ export function getRechartsColorsErrorAction(error) {
   return {
     type: GET_RECHARTS_COLORS_ERROR,
     error,
+  };
+}
+
+export function loadUserDataAction() {
+  return {
+    type: ON_LOAD_USER_DATA,
+  };
+}
+export function availableCrptFundsAction(crptFunds) {
+  return {
+    type: ON_AVAILABLE_CRPT_FUNDS,
+    crptFunds,
   };
 }

@@ -113,4 +113,8 @@ export default defineMessages({
     id: `${scope}.saveCurrencySuccess`,
     defaultMessage: 'The currency has been changed successfully.',
   },
+  CryptoCurrencyAddress: {
+    id: `${scope}.cryptoCurrencyAddress`,
+    defaultMessage: 'Address.',
+  },
 });

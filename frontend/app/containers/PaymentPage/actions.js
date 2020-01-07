@@ -39,6 +39,7 @@ import {
   GET_AUTHORIZATION_KEY,
   GET_AUTHORIZATION_KEY_SUCCESS,
   GET_AUTHORIZATION_KEY_ERROR,
+  CHANGE_CURRENCY_TYPE,
 } from './constants';
 
 export function getAuthorizationKeyAction() {
@@ -274,5 +275,12 @@ export function stepNextAction() {
 export function stepBackAction() {
   return {
     type: PAYMENT_STEP_BACK,
+  };
+}
+export function handleChangeCurrencyType(currencyType,currencyTypeString) {
+  return {
+    type: CHANGE_CURRENCY_TYPE,
+    currencyType,
+    currencyTypeString,
   };
 }

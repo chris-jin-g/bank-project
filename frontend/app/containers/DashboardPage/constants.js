@@ -111,3 +111,7 @@ export const GET_CREATED_DATE_SUCCESS =
   'app/DashboardPage/GET_CREATED_DATE_SUCCESS';
 export const GET_CREATED_DATE_ERROR =
   'app/DashboardPage/GET_CREATED_DATE_ERROR';
+export const ON_LOAD_USER_DATA = 
+  'app/DashboardPage/ON_LOAD_USER_DATA';
+export const ON_AVAILABLE_CRPT_FUNDS =
+  'app/DashboardPage/ON_AVAILABLE_CRPT_FUNDS';

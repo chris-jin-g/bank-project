@@ -4,10 +4,13 @@
  *
  */
 
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Helmet } from 'react-helmet';
 import { FormattedMessage } from 'react-intl';
 import MediaQuery from 'react-responsive';
+import { useInjectSaga } from 'utils/injectSaga';
+import saga from 'containers/DashboardPage/saga';
 
 // Import Components
 import { Responsive, WidthProvider } from 'react-grid-layout';
@@ -24,6 +27,9 @@ import BankDeposits from 'components/App/BankDeposits';
 import BankCredits from 'components/App/BankCredits';
 import messages from './messages';
 
+import {
+  loadUserDataAction,
+} from 'containers/DashBoardPage/actions';
 // Import Utils
 import { PHONE_LANDSCAPE_VIEWPORT_WIDTH } from 'utils/rwd';
 
@@ -46,9 +52,20 @@ function saveToLS(key, value) {
   }
 }
 
+const key = 'DashboardPage';
 export default function DashboardPage() {
+  const dispatch = useDispatch();
+  const onLoadUserData = () => dispatch(loadUserDataAction());
+
   const ResponsiveGridLayout = WidthProvider(Responsive);
   const originalLayouts = getFromLS('layouts') || {};
+
+  // useInjectReducer({ key, reducer });
+  useInjectSaga({ key, saga });
+
+  useEffect(() => {
+    onLoadUserData();
+  }, []);
 
   return (
     <Fragment>

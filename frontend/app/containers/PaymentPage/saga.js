@@ -19,6 +19,9 @@ import {
   makeRecipientIdSelector,
   makeAuthorizationKeySelector,
   makeIsSendAuthorizationKeySelector,
+  makeCurrencyType,
+  makePaymentStateAll,
+  makeCurrencyTypeString,
 } from 'containers/PaymentPage/selectors';
 import { makeIsOpenNavigationDesktopSelector } from 'containers/App/selectors';
 import { makeSelectLocale } from 'containers/LanguageProvider/selectors';
@@ -169,7 +172,10 @@ export function* handleAmountMoney() {
   const api = new ApiEndpoint();
   const token = auth.getToken();
   const amountMoney = yield select(makeAmountMoneySelector());
-  const requestURL = api.getIsAmountMoneyPath(amountMoney);
+  const currencyType = yield select(makeCurrencyType());  // BTC or USD - currency type Id
+  const currencyTypeString = yield select(makeCurrencyTypeString());
+  const paymentStateAll = yield select(makePaymentStateAll());  
+  const requestURL = api.getIsAmountMoneyPath(amountMoney,currencyType);
 
   if (!amountMoney || isNaN(amountMoney))
     return yield put(
@@ -235,8 +241,9 @@ export function* handleRegisterTransaction() {
   const amountMoney = yield select(makeAmountMoneySelector());
   const transferTitle = yield select(makeTransferTitleSelector());
   const locale = yield select(makeSelectLocale());
+  const currencyType = yield select(makeCurrencyType());
+  const recipientId = yield select(makeRecipientIdSelector());
   const requestURL = api.getCreatePath();
-
   try {
     const response = yield call(request, requestURL, {
       method: 'POST',
@@ -250,12 +257,14 @@ export function* handleRegisterTransaction() {
         amountMoney,
         transferTitle,
         locale,
+        currencyType,
+        recipientId,
       }),
     });
 
     const { success } = response;
     if (!success) return yield put(sendAuthorizationKeyErrorAction('error'));
-    window.open('http://localhost:3000/dashboard','_self');
+    window.open('http://localhost:3000/payment','_self');
     yield put(
       sendAuthorizationKeySuccessAction(
         <FormattedMessage {...messages.keyHasBeenSent} />,
@@ -266,7 +275,7 @@ export function* handleRegisterTransaction() {
   }
 }
 
-export function* handleConfirmTransaction() {
+export function* handleConfirmTransaction() {  
   const auth = new AuthService();
   const api = new ApiEndpoint();
   const token = auth.getToken();

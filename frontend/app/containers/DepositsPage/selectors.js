@@ -160,6 +160,31 @@ const makeUserID = () =>
       selectSettingsPageDomain,
       substate=>substate.userID,
     );
+const makeCryptoAddress = () =>
+  createSelector(
+      selectSettingsPageDomain,
+      substate=>substate.cryptoAddress,
+    );
+const makeAddCrptAmount = () =>
+  createSelector(
+      selectSettingsPageDomain,
+      substate=>substate.addCrptAmount,
+    );
+const makeTotalCrptAmount = () =>
+  createSelector(
+      selectSettingsPageDomain,
+      substate=>substate.totalCrptAmount,
+    );
+const makeNewCrptStatus = () =>
+  createSelector(
+      selectSettingsPageDomain,
+      substate=>substate.newCrptStatus,
+    );
+const makeCrptCopyStatus = () =>
+  createSelector(
+      selectSettingsPageDomain,
+      substate=>substate.crptAddressCopyStatus,
+    );
 export default makeSelectSettingsPage;
 export {
   makeNameSelector,
@@ -186,4 +211,9 @@ export {
   makeDepositsCurrencyName,
   makeErrorAmount,
   makeUserID,
+  makeCryptoAddress,
+  makeAddCrptAmount,
+  makeTotalCrptAmount,
+  makeNewCrptStatus,
+  makeCrptCopyStatus,
 };

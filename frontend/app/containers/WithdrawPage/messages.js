@@ -117,8 +117,16 @@ export default defineMessages({
     id: `${scope}.saveCurrencySuccess`,
     defaultMessage: 'The currency has been changed successfully.',
   },
-  errorAmount: {
+  errorWithdrawAmount: {
     id: `${scope}.errorWithdrawAmount`,
     defaultMessage: 'Input Withdraw amount.',
+  },
+  errorWithdrawEmail: {
+    id: `${scope}.errorWithdrawEmail`,
+    defaultMessage: 'Input Paypal Account.',
+  },
+  errorWithdrawEmailValidation: {
+    id: `${scope}.errorWithdrawEmailValidation`,
+    defaultMessage: 'Paypal account must be a valid email.',
   },
 });

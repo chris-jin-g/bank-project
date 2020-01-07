@@ -25,6 +25,10 @@ export default defineMessages({
     id: `${scope}.stepConfirmTheData`,
     defaultMessage: 'Confirm the data',
   },
+  stepTypeOfCurrency: {
+    id: `${scope}.stepTypeOfCurrency`,
+    defaultMessage: 'Select the type of currency',
+  },
   inputAccountNumber: {
     id: `${scope}.inputAccountNumber`,
     defaultMessage: 'Search for the account number...',
@@ -168,5 +172,9 @@ export default defineMessages({
   toPayment: {
     id: `${scope}.toPayment`,
     defaultMessage: 'to',
+  },
+  confirmTransfer: {
+    id: `${scope}.confirmTransfer`,
+    defaultMessage: 'Confirm',
   },
 });

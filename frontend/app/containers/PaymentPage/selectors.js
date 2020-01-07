@@ -110,6 +110,26 @@ const makeSelectPaymentPage = () =>
     selectPaymentPageDomain,
     substate => substate,
   );
+/**
+ * All state of the payment page
+ */
+
+const makePaymentStateAll = () =>
+  createSelector(
+    selectPaymentPageDomain,
+    substate => substate,
+  );
+
+const makeCurrencyType = () =>
+  createSelector(
+    selectPaymentPageDomain,
+    substate => substate.currencyType,
+  );
+const makeCurrencyTypeString = () =>
+    createSelector(
+      selectPaymentPageDomain,
+      substate => substate.currencyTypeString,
+    );
 
 export default makeSelectPaymentPage;
 export {
@@ -128,4 +148,7 @@ export {
   makeErrorSelector,
   makeSuggestionsSelector,
   makeCurrencySelector,
+  makeCurrencyType,
+  makePaymentStateAll,
+  makeCurrencyTypeString,
 };

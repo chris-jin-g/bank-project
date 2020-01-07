@@ -42,6 +42,7 @@ import {
   GET_RECHARTS_COLORS_SUCCESS,
   GET_RECHARTS_COLORS_ERROR,
   GET_SAVINGS_SUCCESS,
+  ON_AVAILABLE_CRPT_FUNDS,
 } from './constants';
 
 export const initialState = {
@@ -64,6 +65,7 @@ export const initialState = {
   rechartsColors: [],
   rechartsData: [],
   error: '',
+  availableCrptFunds: '',
 };
 
 /* eslint-disable default-case, no-param-reassign */
@@ -238,6 +240,9 @@ const dashboardPageReducer = produce((draft, action) => {
       draft.incomingTransfersSum = null;
       draft.rechartsColors = [];
       draft.rechartsData = [];
+      break;
+    case ON_AVAILABLE_CRPT_FUNDS:
+      draft.availableCrptFunds = action.crptFunds;
       break;
   }
 }, initialState);

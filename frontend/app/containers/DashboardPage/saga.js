@@ -17,6 +17,7 @@ import { makeSelectLocale } from 'containers/LanguageProvider/selectors';
 import {
   makeOutgoingTransfersSumSelector,
   makeIncomingTransfersSumSelector,
+  makeAvailableCrptFunds,
 } from 'containers/DashboardPage/selectors';
 
 // Import Actions
@@ -54,6 +55,7 @@ import {
   getCurrencyIdSuccessAction,
   getCurrencyIdErrorAction,
   getSurnameErrorAction,
+  availableCrptFundsAction,
 } from './actions';
 
 // Import Constants
@@ -73,7 +75,9 @@ import {
   GET_ACCOUNT_BILLS,
   GET_RECENT_TRANSACTIONS_RECIPIENT,
   GET_RECENT_TRANSACTIONS_SENDER,
+  ON_LOAD_USER_DATA,
 } from './constants';
+import { makeAvailableFundsSelector } from './selectors';
 
 export function* handleUserdata() {
   const auth = new AuthService();
@@ -81,7 +85,6 @@ export function* handleUserdata() {
   const token = auth.getToken();
   const locale = yield select(makeSelectLocale());
   const requestURL = api.getUsersPath();
-
   try {
     const response = yield call(request, requestURL, {
       method: 'GET',
@@ -143,6 +146,11 @@ export function* handleAccountingData() {
   const token = auth.getToken();
   const requestURL = api.getBillsPath();
 
+  const test = yield select(makeAvailableCrptFunds());
+  console.log(test);
+
+
+
   try {
     const response = yield call(request, requestURL, {
       method: 'GET',
@@ -153,7 +161,7 @@ export function* handleAccountingData() {
       },
     });
 
-    const { availableFunds, accountBill, currency, additionals } = response;
+    const { availableFunds, accountBill, currency, additionals, crptFunds } = response;
 
     if (availableFunds || availableFunds === 0)
       yield put(
@@ -204,7 +212,8 @@ export function* handleAccountingData() {
         getOutgoingTransfersSumSuccessAction(additionals.outgoingTransfersSum),
       );
     else yield put(getOutgoingTransfersSumErrorAction('error'));
-
+    
+    yield put(availableCrptFundsAction(crptFunds),);
     yield call(handleRecharts);
   } catch (error) {
     yield put(getAvailableFundsErrorAction(error));
@@ -357,6 +366,7 @@ function* handleRecharts() {
 }
 
 export default function* dashboardPageSaga() {
+  yield takeLatest(ON_LOAD_USER_DATA, handleAccountingData);
   yield takeLatest(
     GET_NAME ||
       GET_SURNAME ||

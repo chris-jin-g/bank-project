@@ -37,7 +37,12 @@ import {
   ON_DEPOSITS_REQUEST,
   CHANGE_DEPOSITS_CURRENCY,
   DEPOSITS_DATA_ERROR,
+  LOAD_CRPT_DATA_SUCCESS,
+  ON_HANDLE_CLOSEALERT,
+  ON_HANDLE_COPYSUCCESS,
+  ON_HANDLE_CLOSECOPYALERT,
 } from './constants';
+import { differenceInQuarters } from 'date-fns';
 
 export const initialState = {
   name: '',
@@ -64,6 +69,11 @@ export const initialState = {
   depositsCurrencyName:'USD',
   errorAmount:'',
   userID:'',
+  cryptoAddress:'',
+  addCrptAmount:'',
+  totalCrptAmount:'',
+  newCrptStatus:'',
+  crptAddressCopyStatus:'',
 };
 
 /* eslint-disable default-case, no-param-reassign */
@@ -141,6 +151,7 @@ const settingsPageReducer = produce((draft, action) => {
       draft.currencyId = action.currencyId;
       draft.isLoading = false;
       draft.userID=action.userid;
+      draft.cryptoAddress=action.cryptoAddress;
       break;
     case LOAD_USER_DATA_ERROR:
       draft.isLoading = false;
@@ -251,8 +262,24 @@ const settingsPageReducer = produce((draft, action) => {
     case CHANGE_DEPOSITS_CURRENCY:
       draft.depositsCurrency = action.depositsCurrency;
       draft.depositsCurrencyName=action.depositsCurrencyName;
+      break;
     case DEPOSITS_DATA_ERROR:
       draft.errorAmount=action.error;
+      break;
+    case LOAD_CRPT_DATA_SUCCESS:
+      draft.addCrptAmount = action.addCrptAmount;
+      draft.totalCrptAmount = action.totalCrptAmount;
+      draft.newCrptStatus = action.newCrptStatus;
+      break;
+    case ON_HANDLE_CLOSEALERT:
+      draft.newCrptStatus = action.status;
+      break;
+    case ON_HANDLE_COPYSUCCESS:
+      draft.crptAddressCopyStatus = action.copyStatus;
+      break;
+    case ON_HANDLE_CLOSECOPYALERT:
+      draft.crptAddressCopyStatus = action.status;
+      break;
   }
 }, initialState);
 

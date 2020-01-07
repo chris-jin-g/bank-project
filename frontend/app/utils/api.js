@@ -75,8 +75,8 @@ export default class ApiEndpoint {
     return `${BASE_URL}${BILLS_PATH}/${accountBill}/isAccountBill`;
   }
 
-  getIsAmountMoneyPath(amountMoney) {
-    return `${BASE_URL}${BILLS_PATH}/${amountMoney}/isAmountMoney`;
+  getIsAmountMoneyPath(amountMoney,currencyType) {
+    return `${BASE_URL}${BILLS_PATH}/${amountMoney}/${currencyType}/isAmountMoney`;
   }
 
   getTransactionsPath(limit = '') {
